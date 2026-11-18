@@ -186,7 +186,7 @@ footer { margin-top: 28px; color: var(--muted); font-size: 0.85rem; }
     <a href="#security">Security</a>
     <a href="#costs">Cost calculator</a>
     <a href="#wetransfer">Why not WeTransfer</a>
-    <a href="#notyet">Not done yet</a>
+    <a href="#needs">What we need</a>
   </nav>
 
   <section id="overview" class="overview">
@@ -347,15 +347,17 @@ footer { margin-top: 28px; color: var(--muted); font-size: 0.85rem; }
     <div class="note" style="margin-top:16px"><strong>Honest costs and risks.</strong> One provider (Cloudflare) runs the program, the database and the files - if it is down, the portal is down. The portal is our own software: someone has to look after it and its updates. The daily database copy lands on a shop computer, so that computer has to be on and backed up.</div>
   </section>
 
-  <section id="notyet">
-    <h2>Not done yet</h2>
-    <ul>
-      <li>The portal is a <strong>pilot</strong> on a Cloudflare test address; the shop's own domain comes later.</li>
-      <li>Prices for customers are not in the portal - still to decide.</li>
-      <li>"Custom size" pieces were switched on on 18 Nov 2026; the first real orders with it are still to come.</li>
-      <li>More detailed problem codes from RipFlow to the customer (the next version of the exchange contract) are still to do.</li>
-      <li>The database's use per shop view has not been measured yet (it is far inside the free allowances, but not measured).</li>
-    </ul>
+  <section id="needs">
+    <h2>What we need from the shop</h2>
+    <p>Today the pilot runs on the developer's own private accounts, on a Cloudflare test address. To run it for real customers, every service below should belong to the shop, opened with a shop e-mail address, so that access and billing stay with the business.</p>
+    <div class="grid2">
+      <div class="card"><h3>1. Cloudflare account</h3><p>Runs the portal's program, the database, the customers' files (EU) and the lock on the shop's pages (Access). Needs a company payment card for Workers Paid ($5 a month - see the calculator), two-step sign-in and a spending alert. Cloudflare is a US company, so the shop accepts its data processing terms (GDPR) before real customers' data goes in. The portal is then set up again in this account; the project has scripts for it.</p></div>
+      <div class="card"><h3>2. Resend account (e-mails)</h3><p>Sends the sign-in links and the order e-mails. The pilot uses Resend's test sender, which delivers <strong>only to the account owner's own address</strong> - real customers get no e-mail until the shop's account sends from the shop's domain. The free plan is enough at the portal's limit.</p></div>
+      <div class="card"><h3>3. The shop's domain</h3><p>An address such as portal.maake.com instead of the test address, and Resend's records for sending from the domain. Both are a few DNS records where maake.com is managed (GoDaddy), added without touching the records of the shop's e-mail (Microsoft 365).</p></div>
+      <div class="card"><h3>4. Google sign-in</h3><p>The "Sign in with Google" button uses a sign-in client registered in Google Cloud. It should be registered under the shop's Google account, with the shop's name on Google's sign-in page.</p></div>
+      <div class="card"><h3>5. Code and backups</h3><p>The portal's code is in a private GitHub repository on the developer's account; it should move to a shop account or organisation. The daily database copy goes to a shop computer that is on and backed up.</p></div>
+      <div class="card"><h3>6. People</h3><p>The staff e-mail addresses allowed into the shop's pages, and one person who receives Cloudflare's and Resend's bills and alerts.</p></div>
+    </div>
   </section>
 
   <footer>Prepared by the portal and RipFlow teams, 18 November 2026. Where the numbers come from: the portal's code; RipFlow's code (the print room, in the RipFlow team's words); Cloudflare's and Resend's public price lists (18 Nov 2026); the shop's own WeTransfer bill (£23 a month). The exchange rate is a field to change, and the 300,000 station requests a month are an estimate. The list of sources is kept with the project.</footer>
