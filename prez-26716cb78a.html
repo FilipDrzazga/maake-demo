@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- public demo on GitHub Pages (PREZ-2): reachable by link only, kept out of search engines; a copy of the approved PREZ-1 page -->
+<meta name="robots" content="noindex, nofollow">
+<title>Customer Portal Process</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #f6f5f2;
+  --surface: #ffffff;
+  --surface-2: #efede8;
+  --text: #1d1c1a;
+  --muted: #5f5b54;
+  --line: #dcd8d0;
+  --accent: #2357c6;
+  --accent-soft: #e3ebfb;
+  --portal: #2357c6;
+  --cloud: #d9730d;
+  --station: #2f8f5b;
+  --warn: #9a5b00;
+  --warn-soft: #fbf0dc;
+  --dot: #d9730d;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161615;
+    --surface: #1f1f1d;
+    --surface-2: #292927;
+    --text: #ecebe7;
+    --muted: #a6a29a;
+    --line: #3a3936;
+    --accent: #7ea6f2;
+    --accent-soft: #23314d;
+    --portal: #7ea6f2;
+    --cloud: #f0a35a;
+    --station: #6cc394;
+    --warn: #f0b860;
+    --warn-soft: #3a2f1c;
+    --dot: #f0a35a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161615;
+  --surface: #1f1f1d;
+  --surface-2: #292927;
+  --text: #ecebe7;
+  --muted: #a6a29a;
+  --line: #3a3936;
+  --accent: #7ea6f2;
+  --accent-soft: #23314d;
+  --portal: #7ea6f2;
+  --cloud: #f0a35a;
+  --station: #6cc394;
+  --warn: #f0b860;
+  --warn-soft: #3a2f1c;
+  --dot: #f0a35a;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+header.top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; margin: 0 0 12px; }
+h3 { font-size: 1.05rem; margin: 0 0 6px; }
+p { margin: 0 0 12px; }
+.lead { font-size: 1.1rem; color: var(--muted); max-width: 720px; }
+.theme { border: 1px solid var(--line); background: var(--surface); color: var(--text); border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 0.9rem; cursor: pointer; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 8px; }
+nav.toc a { color: var(--accent); text-decoration: none; font-size: 0.92rem; border: 1px solid var(--line); background: var(--surface); padding: 4px 10px; border-radius: 999px; }
+section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px; margin-top: 20px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.card { background: var(--surface-2); border-radius: 10px; padding: 14px 16px; }
+.card p:last-child, .card ul:last-child { margin-bottom: 0; }
+ul { margin: 0 0 12px; padding-left: 20px; }
+li { margin: 3px 0; }
+.muted { color: var(--muted); }
+.small { font-size: 0.88rem; }
+.tag { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; margin-right: 6px; vertical-align: 1px; }
+.tag.portal { background: var(--accent-soft); color: var(--portal); }
+.tag.cloud { background: var(--warn-soft); color: var(--cloud); }
+.tag.station { background: color-mix(in srgb, var(--station) 16%, transparent); color: var(--station); }
+.note { background: var(--warn-soft); border-radius: 10px; padding: 12px 16px; color: var(--text); }
+.note strong { color: var(--warn); }
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--muted); font-size: 0.85rem; }
+.table-wrap { overflow-x: auto; }
+
+/* overview diagram */
+.overview svg { width: 100%; height: auto; display: block; }
+.overview text { fill: var(--text); font: 600 15px system-ui, sans-serif; }
+.overview text.sub { fill: var(--muted); font: 400 12.5px system-ui, sans-serif; }
+.overview .box { fill: var(--surface-2); stroke: var(--line); }
+.overview .arrow { stroke: var(--muted); stroke-width: 1.6; fill: none; marker-end: url(#arrowhead); }
+.overview .arrowhead { fill: var(--muted); }
+
+/* stage by stage */
+.track { position: relative; display: grid; grid-template-columns: repeat(9, 1fr); gap: 4px; margin: 8px 0 16px; }
+.track::before { content: ""; position: absolute; left: 5%; right: 5%; top: 21px; height: 3px; background: var(--line); border-radius: 2px; }
+.stop { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: 0; padding: 0; font: inherit; color: var(--muted); cursor: pointer; }
+.stop .num { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: var(--surface); border: 3px solid var(--line); color: var(--muted); z-index: 1; transition: border-color .3s, background .3s, color .3s; }
+.stop .lbl { font-size: 0.78rem; text-align: center; line-height: 1.25; }
+.stop.portal.done .num, .stop.portal.on .num { border-color: var(--portal); color: var(--portal); }
+.stop.cloud.done .num, .stop.cloud.on .num { border-color: var(--cloud); color: var(--cloud); }
+.stop.station.done .num, .stop.station.on .num { border-color: var(--station); color: var(--station); }
+.stop.on .num { background: var(--surface-2); transform: scale(1.08); }
+.stop.on .lbl { color: var(--text); font-weight: 600; }
+.stop:focus-visible .num { outline: 3px solid var(--accent); outline-offset: 2px; }
+.file-dot { position: absolute; top: 12px; width: 22px; height: 22px; margin-left: -11px; border-radius: 5px; background: var(--dot); box-shadow: 0 2px 6px rgba(0,0,0,.25); z-index: 2; transition: left .7s cubic-bezier(.5,0,.2,1); pointer-events: none; }
+.file-dot::after { content: ""; position: absolute; right: 0; top: 0; border-style: solid; border-width: 0 7px 7px 0; border-color: transparent var(--surface) transparent transparent; }
+.stage-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.stage-panel .who { font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
+.stage-panel h3 { font-size: 1.25rem; margin-bottom: 8px; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+.btn { border: 1px solid var(--line); background: var(--surface-2); color: var(--text); border-radius: 8px; padding: 8px 14px; font: inherit; font-size: 0.95rem; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.btn:disabled { opacity: .45; cursor: default; }
+.fade { animation: fade .45s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* lifetime bars */
+.life { display: grid; gap: 10px; }
+.life-row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; align-items: center; }
+.bar { position: relative; height: 26px; background: var(--surface-2); border-radius: 6px; overflow: hidden; }
+.bar span { position: absolute; top: 0; bottom: 0; left: 0; border-radius: 6px; display: flex; align-items: center; padding-left: 8px; font-size: 0.8rem; color: var(--surface); font-weight: 600; white-space: nowrap; }
+
+/* calculator */
+.calc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+.field { margin-bottom: 14px; }
+.field label { display: flex; justify-content: space-between; gap: 8px; font-size: 0.92rem; margin-bottom: 4px; }
+.field label output { font-weight: 700; font-variant-numeric: tabular-nums; }
+.field input[type="range"] { width: 100%; accent-color: var(--accent); }
+.field select, .field input[type="number"] { width: 100%; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
+.field .hint { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.result td:last-child, .result th:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.result tr.total td { font-weight: 700; font-size: 1.05rem; border-bottom: 0; }
+.big { font-size: 2rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.compare .card { text-align: center; }
+.compare .card.us { outline: 2px solid var(--accent); }
+.from-ripflow { border-left: 4px solid var(--station); background: var(--surface-2); padding: 12px 16px; border-radius: 0 10px 10px 0; }
+footer { margin-top: 28px; color: var(--muted); font-size: 0.85rem; }
+
+@media (max-width: 760px) {
+  h1 { font-size: 1.6rem; }
+  section { padding: 18px 16px; }
+  .stage-panel, .calc, .compare { grid-template-columns: 1fr; }
+  .track { grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 0; }
+  .stop .num { width: 32px; height: 32px; font-size: 0.85rem; border-width: 2px; }
+  .track::before { top: 15px; }
+  .file-dot { top: 7px; width: 18px; height: 18px; margin-left: -9px; }
+  .stop .lbl { display: none; }
+  .life-row { grid-template-columns: 1fr; gap: 4px; }
+  .overview .diagram { overflow-x: auto; }
+  .overview svg { min-width: 680px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div>
+      <h1>From customer file to printed fabric</h1>
+      <p class="lead">How the customer portal and RipFlow work together: what happens to a customer's file at every stage, who can see it, when it is deleted, and what it costs to run on Cloudflare compared with WeTransfer.</p>
+    </div>
+    <button class="theme" id="theme" type="button" aria-label="Switch light or dark">Light / dark</button>
+  </header>
+  <nav class="toc" aria-label="Sections">
+    <a href="#overview">Overview</a>
+    <a href="#stages">Stage by stage</a>
+    <a href="#printroom">In the print room</a>
+    <a href="#signin">Signing in</a>
+    <a href="#data">Data and deletion</a>
+    <a href="#security">Security</a>
+    <a href="#costs">Cost calculator</a>
+    <a href="#wetransfer">Why not WeTransfer</a>
+    <a href="#notyet">Not done yet</a>
+  </nav>
+
+  <section id="overview" class="overview">
+    <h2>The whole picture</h2>
+    <p>Today a customer sends the files by WeTransfer and the order as a spreadsheet (CSV), which RipFlow reads in its Custom Order tab; customers whose designs are kept in our library send only the list. With the portal the customer places the order and the file together, the portal checks the file straight away, and RipFlow on our computer picks both up by itself. The customer then follows the order in the portal and gets an e-mail when something changes.</p>
+    <div class="diagram"><svg viewBox="0 0 960 230" role="img" aria-label="Customer browser sends files to the portal on Cloudflare in the EU; the RipFlow computer in the shop takes orders and files from the portal and sends statuses back">
+      <defs>
+        <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker>
+      </defs>
+      <rect class="box" x="10" y="40" width="250" height="150" rx="14"/>
+      <text x="135" y="85" text-anchor="middle">Customer</text>
+      <text class="sub" x="135" y="110" text-anchor="middle">web browser, any computer</text>
+      <text class="sub" x="135" y="132" text-anchor="middle">signs in, sends files,</text>
+      <text class="sub" x="135" y="152" text-anchor="middle">places and follows orders</text>
+
+      <rect class="box" x="355" y="20" width="250" height="190" rx="14" style="stroke: var(--cloud)"/>
+      <text x="480" y="60" text-anchor="middle">Portal on Cloudflare (EU)</text>
+      <text class="sub" x="480" y="88" text-anchor="middle">Worker: the portal's program</text>
+      <text class="sub" x="480" y="110" text-anchor="middle">D1: customers and orders</text>
+      <text class="sub" x="480" y="132" text-anchor="middle">R2: the customers' files</text>
+      <text class="sub" x="480" y="154" text-anchor="middle">Access: guards the shop pages</text>
+      <text class="sub" x="480" y="176" text-anchor="middle">Resend: sends the e-mails</text>
+
+      <rect class="box" x="700" y="40" width="250" height="150" rx="14" style="stroke: var(--station)"/>
+      <text x="825" y="85" text-anchor="middle">Our shop: RipFlow</text>
+      <text class="sub" x="825" y="110" text-anchor="middle">Cotton PC imports orders</text>
+      <text class="sub" x="825" y="132" text-anchor="middle">and files; print, press,</text>
+      <text class="sub" x="825" y="152" text-anchor="middle">QC, sewing, packing</text>
+
+      <path class="arrow" d="M262 95 L352 95"/>
+      <path class="arrow" d="M352 140 L262 140"/>
+      <text class="sub" x="307" y="85" text-anchor="middle">files, orders</text>
+      <text class="sub" x="307" y="160" text-anchor="middle">status, e-mail</text>
+      <path class="arrow" d="M697 95 L607 95"/>
+      <path class="arrow" d="M607 140 L697 140"/>
+      <text class="sub" x="652" y="85" text-anchor="middle">statuses</text>
+      <text class="sub" x="652" y="160" text-anchor="middle">orders, files</text>
+    </svg></div>
+    <p class="small muted">RipFlow always asks the portal; the portal never reaches into the shop's computers. Nothing in the shop has to be open to the internet.</p>
+  </section>
+
+  <section id="stages">
+    <h2>Stage by stage</h2>
+    <p class="muted">Click a stage, or press Play to follow one file. <span class="tag portal">portal</span><span class="tag cloud">Cloudflare</span><span class="tag station">RipFlow</span></p>
+    <div class="track" id="track" role="tablist" aria-label="Stages">
+      <div class="file-dot" id="dot" aria-hidden="true"></div>
+    </div>
+    <div id="panel" class="stage-panel" role="tabpanel" aria-live="polite"></div>
+    <div class="controls">
+      <button class="btn" id="prev" type="button">Back</button>
+      <button class="btn primary" id="play" type="button">Play</button>
+      <button class="btn" id="next" type="button">Next</button>
+    </div>
+  </section>
+
+  <section id="printroom">
+    <h2>In the print room</h2>
+    <div class="from-ripflow">
+      <p>One station in the print room, the Cotton PC, asks the portal for new orders once a minute.</p>
+      <p>For each confirmed order it downloads the customer's file over an encrypted connection, through a short-lived link straight from the portal's storage in the EU; the station's own key is never sent to that storage.</p>
+      <p>Before the file reaches the print queue, Windows Defender scans it; a file that fails the scan, is damaged, is in a format we cannot print or is larger than 2 GB never enters the queue, and the portal is told, so the customer can send a new file.</p>
+      <p>Files that pass land in the Inbox on the shop's own server, next to the Etsy and other orders, where an operator picks the files and a printer and creates a print batch; RipFlow then writes the print job for PrintFactory, the printing software.</p>
+      <p>As the item moves through production, RipFlow reports each step back to the portal: accepted (file received), in production (printed, pressed, checked or at sewing), ready (packed) and shipped.</p>
+      <p>When a batch is created, the file leaves the Inbox and a print copy is kept in the PRINTED archive on the shop's server, so a print can be repeated.</p>
+      <p>Old PRINTED batches are deleted only by hand, from a station that has been allowed to do it, and only once they are at least 60 days old.</p>
+      <p>90 days after an order is finished, RipFlow shrinks its own record of it to the order number, the customer's name and the line ids; an order whose customer was asked for a new file is kept whole, and none of this data leaves the shop.</p>
+      <p class="small muted" style="margin-bottom:0">- written by the RipFlow team</p>
+    </div>
+  </section>
+
+  <section id="signin">
+    <h2>Signing in</h2>
+    <p>Each customer has an account the shop opens for them (by invitation). There are three ways in, and the customer chooses:</p>
+    <div class="grid2">
+      <div class="card"><h3>Link by e-mail</h3><p>The customer types their e-mail address and gets a sign-in link. The link works <strong>once</strong> and only for <strong>15 minutes</strong>. The portal keeps only a fingerprint (hash) of the link, not the link itself.</p></div>
+      <div class="card"><h3>Password</h3><p>A customer can set a password. It is never stored: the portal keeps only a salted PBKDF2-SHA256 hash (100,000 rounds). Wrong guesses are limited (10 per address in 15 minutes, 50 a day).</p></div>
+      <div class="card"><h3>Google</h3><p>A signed-in customer links their Google account once; after that one button signs them in. The portal keeps only Google's account ID, never the Google password.</p></div>
+    </div>
+    <p style="margin-top:14px">After signing in the browser keeps a secure session cookie (Secure, HttpOnly - scripts on the page cannot read it). It lasts <strong>30 days</strong> and is renewed while the customer uses the portal, but never longer than <strong>90 days</strong> after signing in; then the customer signs in again.</p>
+    <p class="muted small">The shop's own pages are separate: they sit behind Cloudflare Access, so only the shop's staff and RipFlow stations get in (see Security).</p>
+  </section>
+
+  <section id="data">
+    <h2>What we keep, where, and for how long</h2>
+    <div class="grid2">
+      <div class="card"><h3>Database (Cloudflare D1, EU)</h3><ul>
+        <li>Customer accounts: name, e-mail, delivery addresses, password hash</li>
+        <li>Orders: lines, fabric, quantities, status history</li>
+        <li>Designs: name, thumbnail, size, file fingerprint</li>
+        <li>Mail log and shop audit (90 days)</li>
+      </ul><p class="small muted">A copy of the database is exported once a day to the shop's own computer; the last 30 copies are kept.</p></div>
+      <div class="card"><h3>Files (Cloudflare R2, EU)</h3><ul>
+        <li>The customer's print files: PDF, TIFF, JPG or PNG, up to 2 GB each</li>
+        <li>Up to 100 GB per customer at any time</li>
+        <li>Stored only in the EU jurisdiction</li>
+        <li>No payment card data anywhere - the portal takes no payments</li>
+      </ul><p class="small muted">Files have no second copy on purpose: the customer always has the original, and a file lives in the cloud only days.</p></div>
+    </div>
+
+    <h3 style="margin-top:20px">When a file is deleted</h3>
+    <p class="muted small">A night-time clean-up (03:17 UTC) deletes every file past its time. After that only the design's name and thumbnail stay, so the customer still sees it and can send the file again to reorder.</p>
+    <div class="life" aria-label="File lifetimes">
+      <div class="life-row"><div><strong>File never ordered</strong><div class="small muted">sent, but no order or draft uses it</div></div><div class="bar"><span style="width:3.3%;background:var(--muted)"></span><span style="left:4%;color:var(--text);padding-left:6px">24 hours</span></div></div>
+      <div class="life-row"><div><strong>Ordered and downloaded</strong><div class="small muted">RipFlow took it to our disk</div></div><div class="bar"><span style="width:33%;background:var(--station)">10 days after download</span></div></div>
+      <div class="life-row"><div><strong>Upper limit</strong><div class="small muted">whatever happens</div></div><div class="bar"><span style="width:100%;background:var(--cloud)">30 days after upload</span></div></div>
+      <div class="life-row"><div><strong>Kept by the shop</strong><div class="small muted">the shop marks a design to keep</div></div><div class="bar"><span style="width:100%;background:var(--portal)">kept in our library, never expires</span></div></div>
+    </div>
+    <p class="small muted" style="margin-top:12px">The 10 and 30 days are the shop's settings (up to 90). A file our computer has not downloaded yet is never deleted, even past its days. The customer can also remove a file or a whole design themselves, as long as no order or draft uses it.</p>
+  </section>
+
+  <section id="security">
+    <h2>Security in short</h2>
+    <div class="grid2">
+      <div class="card"><h3>Shop pages</h3><p>Behind Cloudflare Access: staff sign in through Access, each RipFlow station has its own token. The portal also checks the Access token itself, so no page relies on one gate only.</p></div>
+      <div class="card"><h3>File downloads</h3><p>RipFlow gets a signed download link valid for 15 minutes, together with the file's SHA-256 fingerprint and size, so a damaged or swapped file is noticed.</p></div>
+      <div class="card"><h3>Uploads</h3><p>The browser sends a big file in 64 MB parts and computes a fingerprint of the whole file. The portal checks the format by the file's content, not its name.</p></div>
+      <div class="card"><h3>Spending limits</h3><p>Cloudflare has no hard spending cap, so the portal sets its own: e.g. 20 uploads and 20 orders per customer a day, 60 e-mails a day (10 kept for sign-in links).</p></div>
+    </div>
+  </section>
+
+  <section id="costs">
+    <h2>Monthly cost calculator</h2>
+    <p class="muted">It starts at zero files: the fixed fees alone. Move the sliders to match a typical month. Prices are Cloudflare's and Resend's public list prices in US dollars (checked 18 Nov 2026); the totals are shown in pounds too. Fixed fees are shown apart from what grows with use.</p>
+    <div class="calc">
+      <div>
+        <div class="field"><label for="files">Customer files a month <output id="filesOut"></output></label><input type="range" id="files" min="0" max="3000" step="10" value="0"></div>
+        <div class="field"><label for="size">Average file size <output id="sizeOut"></output></label><input type="range" id="size" min="10" max="2000" step="10" value="300"></div>
+        <div class="field"><label for="days">Days a file stays in the cloud <output id="daysOut"></output></label><input type="range" id="days" min="1" max="30" step="1" value="12"><div class="hint">Usually import + 10 days; never more than 30.</div></div>
+        <div class="field"><label for="dl">Downloads per file <output id="dlOut"></output></label><input type="range" id="dl" min="1" max="5" step="1" value="2"></div>
+        <div class="field"><label for="mails">E-mails a month <output id="mailsOut"></output></label><input type="range" id="mails" min="0" max="3000" step="50" value="0"></div>
+        <div class="field"><label for="plan">Cloudflare Workers plan</label><select id="plan"><option value="paid">Workers Paid ($5 a month)</option><option value="free">Workers Free</option></select></div>
+        <div class="field"><label for="resend">Resend (e-mail) plan</label><select id="resend"><option value="pro">Pro ($20 a month)</option><option value="free">Free (3,000 e-mails a month, 100 a day)</option></select><div class="hint">The portal itself sends at most 60 e-mails a day (about 1,800 a month), which fits Resend Free - so Free is enough while that limit stays, and the fixed cost is $5 instead of $25. On Free the calculator switches to Pro by itself when the e-mails go over the free limits.</div></div>
+        <div class="field"><label for="wt">WeTransfer today, £ a month</label><input type="number" id="wt" min="0" step="1" value="23"><div class="hint">The shop's current WeTransfer plan.</div></div>
+        <div class="field"><label for="rate">£ for $1</label><input type="number" id="rate" min="0.5" max="1.2" step="0.01" value="0.75"><div class="hint">Cloudflare and Resend charge in US dollars. About 0.75 in November 2026 - use your bank's rate.</div></div>
+      </div>
+      <div>
+        <div class="table-wrap"><table class="result"><thead><tr><th>Item</th><th>Usage</th><th>Cost</th></tr></thead><tbody id="rows"></tbody></table></div>
+        <div class="compare">
+          <div class="card us"><div class="small muted">Portal on Cloudflare</div><div class="big" id="ourTotal"></div><div class="small muted" id="ourUsd"></div></div>
+          <div class="card"><div class="small muted">WeTransfer today</div><div class="big" id="wtTotal"></div><div class="small muted">a month, files only</div></div>
+        </div>
+        <p class="small muted" id="calcNotes" style="margin-top:12px"></p>
+      </div>
+    </div>
+    <p class="small muted" style="margin-top:8px">Not in the numbers: the database (D1) - its use was not measured yet, but the plans include millions of reads a day; Cloudflare Access - free for up to 50 users. Storage counts the files kept on an average day.</p>
+  </section>
+
+  <section id="wetransfer">
+    <h2>Why move from WeTransfer</h2>
+    <div class="grid2">
+      <div class="card"><h3>The file comes with the order</h3><p>No links in e-mails to match with an order by hand, no expired links. Each file belongs to a customer, a design and an order line.</p></div>
+      <div class="card"><h3>Checked before it reaches print</h3><p>Format, size, image resolution (at least 100 dpi for a repeat) and fabric width are checked when the customer sends the file, not when someone opens it.</p></div>
+      <div class="card"><h3>No typing into RipFlow</h3><p>RipFlow imports the order and the file by itself. The customer and the shop see the same metres of fabric ("~1.24m").</p></div>
+      <div class="card"><h3>The customer sees progress</h3><p>Statuses (Accepted, In production, Ready to ship, Shipped, Needs a new file) and e-mails when they change; "Order again" reuses a design.</p></div>
+      <div class="card"><h3>Files clean themselves up</h3><p>Clear rules for how long a file lives, applied every night; files stored in the EU.</p></div>
+      <div class="card"><h3>Cost grows with use</h3><p>A fixed fee ($5 Cloudflare, plus $20 if Resend Pro is kept - with the portal's limit of 60 e-mails a day Resend Free is enough) and cents per GB stored; the calculator shows it for any month.</p></div>
+    </div>
+    <div class="note" style="margin-top:16px"><strong>Honest costs and risks.</strong> One provider (Cloudflare) runs the program, the database and the files - if it is down, the portal is down. The portal is our own software: someone has to look after it and its updates. The daily database copy lands on a shop computer, so that computer has to be on and backed up.</div>
+  </section>
+
+  <section id="notyet">
+    <h2>Not done yet</h2>
+    <ul>
+      <li>The portal is a <strong>pilot</strong> on a Cloudflare test address; the shop's own domain comes later.</li>
+      <li>Prices for customers are not in the portal - still to decide.</li>
+      <li>"Custom size" pieces were switched on on 18 Nov 2026; the first real orders with it are still to come.</li>
+      <li>More detailed problem codes from RipFlow to the customer (the next version of the exchange contract) are still to do.</li>
+      <li>The database's use per shop view has not been measured yet (it is far inside the free allowances, but not measured).</li>
+    </ul>
+  </section>
+
+  <footer>Prepared by the portal and RipFlow teams, 18 November 2026. Where the numbers come from: the portal's code; RipFlow's code (the print room, in the RipFlow team's words); Cloudflare's and Resend's public price lists (18 Nov 2026); the shop's own WeTransfer bill (£23 a month). The exchange rate is a field to change, and the 300,000 station requests a month are an estimate. The list of sources is kept with the project.</footer>
+</main>
+
+<script id="pricing">
+// Prices and formulas in one place (facts.md P1-P9). GB = 2^30 bytes, MB = 2^20 bytes.
+const PRICES = {
+  r2: { storagePerGbMonth: 0.015, classAPerMillion: 4.5, classBPerMillion: 0.36, freeGbMonth: 10, freeClassA: 1e6, freeClassB: 10e6 },
+  partMb: 64,
+  workers: { paidFee: 5, paidIncludedRequests: 10e6, paidPerMillion: 0.3, freeRequestsPerDay: 100000 },
+  resend: { freePerMonth: 3000, freePerDay: 100, proFee: 20, proIncluded: 50000 },
+  portalMailsPerDay: 60,
+  stationRequests: 300000,
+};
+
+function estimate(i, P) {
+  const gbMonth = (i.files * i.sizeMb) / 1024 * (i.days / 30);
+  const parts = Math.ceil(i.sizeMb / P.partMb);
+  const classA = i.files * (parts + 2);
+  const classB = i.files * i.downloads;
+  const storage = Math.max(0, gbMonth - P.r2.freeGbMonth) * P.r2.storagePerGbMonth;
+  const opsA = Math.max(0, classA - P.r2.freeClassA) / 1e6 * P.r2.classAPerMillion;
+  const opsB = Math.max(0, classB - P.r2.freeClassB) / 1e6 * P.r2.classBPerMillion;
+  const requests = i.files * (parts + 2) + classB + P.stationRequests;
+  let workersFixed = 0, workersVar = 0, workersOver = false;
+  if (i.plan === 'paid') {
+    workersFixed = P.workers.paidFee;
+    workersVar = Math.max(0, requests - P.workers.paidIncludedRequests) / 1e6 * P.workers.paidPerMillion;
+  } else {
+    workersOver = requests / 30 > P.workers.freeRequestsPerDay;
+  }
+  const mailsPerDay = i.mails / 30;
+  const resendPro = i.resend === 'pro' || i.mails > P.resend.freePerMonth || mailsPerDay > P.resend.freePerDay;
+  const resendFixed = resendPro ? P.resend.proFee : 0;
+  const fixed = workersFixed + resendFixed;
+  const variable = storage + opsA + opsB + workersVar;
+  return {
+    gbMonth, parts, classA, classB, requests, storage, opsA, opsB, workersFixed, workersVar, workersOver,
+    resendPro, resendFixed, mailsOverPortalCap: mailsPerDay > P.portalMailsPerDay,
+    fixed, variable, total: fixed + variable, totalGbp: (fixed + variable) * i.gbpPerUsd,
+  };
+}
+if (typeof module !== 'undefined') module.exports = { PRICES, estimate };
+</script>
+<script>
+(function () {
+  if (typeof document === 'undefined') return;
+  // theme toggle (remembered only in this browser; the page works without it)
+  const root = document.documentElement;
+  try { const t = localStorage.getItem('prez-theme'); if (t) root.dataset.theme = t; } catch (e) {}
+  document.getElementById('theme').addEventListener('click', () => {
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+    try { localStorage.setItem('prez-theme', root.dataset.theme); } catch (e) {}
+  });
+
+  // stages
+  const STAGES = [
+    { who: 'portal', label: 'Sign in', title: '1. The customer signs in', what: 'By an e-mail link, a password or Google. The portal knows who the customer is before any file comes in.', file: 'No file yet.' },
+    { who: 'cloud', label: 'Upload', title: '2. The customer sends a file', what: 'The browser sends the file in 64 MB parts through the portal into its storage (Cloudflare R2, EU) and computes a fingerprint (SHA-256) of the whole file. Up to 2 GB per file.', file: 'The file is in R2 in the EU. If it is never put in an order, it is deleted after 24 hours.' },
+    { who: 'portal', label: 'Check', title: '3. The portal checks it', what: 'Format by the file\'s content (PDF, TIFF, JPG, PNG), size, and for an image printed as a repeat at least 100 dpi. A problem is shown to the customer at once, with what to do. RipFlow checks an image again in the print room - it does not rely on the portal alone.', file: 'A thumbnail and the size are saved with the design.' },
+    { who: 'portal', label: 'Order', title: '4. The customer places the order', what: 'Each line: design, fabric, how it is printed (repeat, panel, fat quarter, tea towel, custom size) and quantity. The portal shows the metres of fabric, the same number RipFlow will count.', file: 'The file now belongs to an order line and stays until RipFlow takes it.' },
+    { who: 'portal', label: 'Shop sees', title: '5. The shop sees the order', what: 'The shop\'s pages (behind Cloudflare Access) list the new order; the shop accepts it (or lets orders be accepted automatically) and can keep a design in its library.', file: 'Unchanged in R2.' },
+    { who: 'station', label: 'Import', title: '6. RipFlow imports it', what: 'Once a minute the importer on the Cotton PC asks the portal for new orders. It downloads each file through a signed link valid for 15 minutes, together with the file fingerprint, and confirms to the portal which version of the order it saved. Windows Defender scans the file before it can reach the print queue; a file that fails the scan, is damaged, cannot be printed or is over 2 GB never enters the queue, and the customer is asked for a new file.', file: 'A copy is now on the shop\'s own server. The cloud copy is kept 10 more days, then deleted.' },
+    { who: 'station', label: 'Production', title: '7. Production in RipFlow', what: 'The file waits in the Inbox next to the Etsy and other orders. An operator picks files and a printer and creates a print batch; RipFlow writes the print job for PrintFactory, the printing software. Then print, heat press, checks, sewing and packing.', file: 'When the batch is created, a print copy goes to the PRINTED archive on the shop\'s server, so a print can be repeated.', ripflow: true },
+    { who: 'station', label: 'Status', title: '8. Status goes back', what: 'RipFlow reports four steps back to the portal, each once per line: accepted (file received), in production, ready (packed) and shipped - or a problem when the file cannot be printed (too large, format not supported, damaged, rejected by the scan). The customer sees Accepted, In production, Ready to ship, Shipped or Needs a new file, with the reason, and gets an e-mail when it changes.', file: 'Unchanged.' },
+    { who: 'cloud', label: 'Clean-up', title: '9. The file is deleted', what: 'The night-time clean-up deletes the file once its time is over (10 days after download, at most 30 days after upload). The design keeps its name and thumbnail, so "Order again" just asks for the file.', file: 'Gone from the cloud. Designs the shop keeps in its library never expire.' },
+  ];
+  const WHO = { portal: 'Portal', cloud: 'Cloudflare', station: 'RipFlow (shop)' };
+  const track = document.getElementById('track');
+  const dot = document.getElementById('dot');
+  const panel = document.getElementById('panel');
+  const stops = STAGES.map((s, n) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'stop ' + s.who;
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-label', s.title);
+    b.innerHTML = '<span class="num">' + (n + 1) + '</span><span class="lbl">' + s.label + '</span>';
+    b.addEventListener('click', () => { stop(); show(n); });
+    track.appendChild(b);
+    return b;
+  });
+  let at = 0, timer = null;
+  function show(n) {
+    at = n;
+    stops.forEach((b, k) => {
+      b.classList.toggle('on', k === n);
+      b.classList.toggle('done', k < n);
+      b.setAttribute('aria-selected', String(k === n));
+    });
+    const b = stops[n];
+    dot.style.left = (b.offsetLeft + b.offsetWidth / 2) + 'px';
+    const s = STAGES[n];
+    const ripflowText = s.ripflow
+      ? '<p class="small muted">The RipFlow team describes the print room in their own words in <a href="#printroom">In the print room</a>.</p>'
+      : '';
+    panel.innerHTML = '<div class="fade"><div class="who"><span class="tag ' + s.who + '">' + WHO[s.who] + '</span></div><h3>' + s.title + '</h3><p>' + s.what + '</p>' + ripflowText + '</div>' +
+      '<div class="card fade"><div class="small muted">Where the file is</div><p>' + s.file + '</p></div>';
+    document.getElementById('prev').disabled = n === 0;
+    document.getElementById('next').disabled = n === STAGES.length - 1;
+  }
+  function stop() { if (timer) { clearInterval(timer); timer = null; } document.getElementById('play').textContent = 'Play'; }
+  document.getElementById('prev').addEventListener('click', () => { stop(); if (at > 0) show(at - 1); });
+  document.getElementById('next').addEventListener('click', () => { stop(); if (at < STAGES.length - 1) show(at + 1); });
+  document.getElementById('play').addEventListener('click', () => {
+    if (timer) { stop(); return; }
+    if (at === STAGES.length - 1) show(0);
+    document.getElementById('play').textContent = 'Pause';
+    timer = setInterval(() => { if (at < STAGES.length - 1) show(at + 1); else stop(); }, 3200);
+  });
+  addEventListener('resize', () => { const b = stops[at]; dot.style.left = (b.offsetLeft + b.offsetWidth / 2) + 'px'; });
+  show(0);
+
+  // calculator
+  const $ = (id) => document.getElementById(id);
+  const usd = (x) => '$' + x.toFixed(2);
+  const gbp = (x) => '£' + x.toFixed(2);
+  const num = (x) => Math.round(x).toLocaleString('en-US');
+  function render() {
+    const i = { files: +$('files').value, sizeMb: +$('size').value, days: +$('days').value, downloads: +$('dl').value, mails: +$('mails').value, plan: $('plan').value, resend: $('resend').value, gbpPerUsd: +$('rate').value || 0 };
+    $('filesOut').textContent = num(i.files);
+    $('sizeOut').textContent = i.sizeMb >= 1000 ? (i.sizeMb / 1024).toFixed(2) + ' GB' : i.sizeMb + ' MB';
+    $('daysOut').textContent = i.days + (i.days === 1 ? ' day' : ' days');
+    $('dlOut').textContent = i.downloads;
+    $('mailsOut').textContent = num(i.mails);
+    const r = estimate(i, PRICES);
+    const rows = [
+      ['File storage (R2)', r.gbMonth.toFixed(1) + ' GB-month, 10 free', usd(r.storage)],
+      ['Uploads (R2 Class A)', num(r.classA) + ' ops, 1 M free', usd(r.opsA)],
+      ['Downloads (R2 Class B)', num(r.classB) + ' ops, 10 M free', usd(r.opsB)],
+      ['Data out to RipFlow', 'free on R2', usd(0)],
+      ['Workers (program)', num(r.requests) + ' requests', i.plan === 'paid' ? usd(r.workersFixed + r.workersVar) + (r.workersVar ? '' : ' fixed') : usd(0)],
+      ['E-mails (Resend)', num(i.mails) + (r.resendPro ? ' - Pro plan' : ' - free plan'), r.resendFixed ? usd(r.resendFixed) + ' fixed' : usd(0)],
+    ];
+    $('rows').innerHTML = rows.map((x) => '<tr><td>' + x[0] + '</td><td class="small muted">' + x[1] + '</td><td>' + x[2] + '</td></tr>').join('') +
+      '<tr><td colspan="2" class="small muted">Fixed fees / grows with use</td><td class="small">' + usd(r.fixed) + ' / ' + usd(r.variable) + '</td></tr>' +
+      '<tr class="total"><td colspan="2">Total a month</td><td>' + usd(r.total) + '<div class="small muted">' + gbp(r.totalGbp) + '</div></td></tr>';
+    $('ourTotal').textContent = gbp(r.totalGbp);
+    $('ourUsd').textContent = usd(r.total) + ' a month';
+    $('wtTotal').textContent = gbp(+$('wt').value || 0);
+    const notes = [];
+    if (r.workersOver) notes.push('Above the Free plan\'s 100,000 requests a day - Workers Paid would be needed.');
+    if (r.mailsOverPortalCap) notes.push('More than the portal\'s own limit of 60 e-mails a day - that limit would have to be raised.');
+    notes.push('Requests include about 300,000 a month from the RipFlow stations asking for news (estimate).');
+    $('calcNotes').textContent = notes.join(' ');
+  }
+  ['files', 'size', 'days', 'dl', 'mails', 'plan', 'resend', 'wt', 'rate'].forEach((id) => $(id).addEventListener('input', render));
+  render();
+})();
+</script>
+</body>
+</html>
